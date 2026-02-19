@@ -4,6 +4,8 @@
 
 ## Class Link: CS5610 Project 2
 Github: https://github.com/Shashankmore20/SatisficingMeals
+Slides: https://docs.google.com/presentation/d/1e2AYU5_qWhqYLUPDUOzLA5Z1_5bqZhFyau5e3wwjaNg/edit?usp=sharing
+Video: ADD
 
 ## Project Objective
 
@@ -52,10 +54,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-
 ## GenAI Usage
-
-<!-- Describe the use of GenAI tools if any. Provide what models were used, versions, prompts, and how it was used. Add this as a section in your readme -->
 
 Model: Claude Sonnet 4.6
 
