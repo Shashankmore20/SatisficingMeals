@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SatisficingMeals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+    <link rel="stylesheet" href="/css/pantry.css" />
+    <link rel="stylesheet" href="/css/shopping.css" />
+    <link rel="icon" type="image/png" href="/public/favicon.ico" />
+  </head>
+  <body>
+    <!-- Auth Pages (shown when logged out) -->
+    <div id="auth-container" class="hidden">
+      <div class="auth-split">
+        <div class="auth-brand">
+          <!-- Floating food decorations -->
+          <div class="auth-brand-deco">
+            <span>🥦</span>
+            <span>🍋</span>
+            <span>🫒</span>
+            <span>🧄</span>
+            <span>🌿</span>
+            <span>🍅</span>
+            <span>🥕</span>
+          </div>
+
+          <img
+            src="/public/images/SatisficingMealsLogo.png"
+            alt="SatisficingMeals"
+            class="brand-image"
+          />
+
+          <div class="brand-divider"></div>
+
+          <p class="brand-tagline">
+            Cook smarter.<br />
+            Waste <em>less</em>.<br />
+            Eat better.
+          </p>
+
+          <div class="brand-features">
+            <div class="brand-feature">
+              <span class="brand-feature-icon">📦</span>
+              <span>Track your pantry & expiry dates</span>
+            </div>
+            <div class="brand-feature">
+              <span class="brand-feature-icon">🍳</span>
+              <span>Get recipes from what you have</span>
+            </div>
+            <div class="brand-feature">
+              <span class="brand-feature-icon">🛒</span>
+              <span>Smart shopping lists</span>
+            </div>
+          </div>
+        </div>
+        <div class="auth-forms">
+          <!-- Login Form -->
+          <div id="login-form" class="auth-card">
+            <div class="auth-card-header">
+              <h2>Welcome back</h2>
+              <p>Sign in to your kitchen dashboard</p>
+            </div>
+            <form id="login">
+              <div class="form-group">
+                <label for="login-username">Username</label>
+                <input
+                  type="text"
+                  id="login-username"
+                  name="username"
+                  required
+                  autocomplete="username"
+                />
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  name="password"
+                  required
+                  autocomplete="current-password"
+                />
+              </div>
+              <div id="login-error" class="form-error hidden"></div>
+              <button type="submit" class="btn btn-primary btn-full">
+                Sign In
+              </button>
+            </form>
+            <p class="auth-switch">
+              New here?
+              <button class="link-btn" id="show-signup">
+                Create an account
+              </button>
+            </p>
+          </div>
+
+          <!-- Signup Form -->
+          <div id="signup-form" class="auth-card hidden">
+            <div class="auth-card-header">
+              <h2>Create account</h2>
+              <p>Start cooking smarter today</p>
+            </div>
+            <form id="signup">
+              <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <input
+                  type="text"
+                  id="signup-name"
+                  name="name"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signup-username">Username</label>
+                <input
+                  type="text"
+                  id="signup-username"
+                  name="username"
+                  required
+                  autocomplete="username"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  name="password"
+                  required
+                  autocomplete="new-password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signup-goal"
+                  >Cooking goal <span class="optional">(optional)</span></label
+                >
+                <input
+                  type="text"
+                  id="signup-goal"
+                  name="goal"
+                  placeholder="e.g. eat at home more, reduce waste..."
+                />
+              </div>
+              <div id="signup-error" class="form-error hidden"></div>
+              <button type="submit" class="btn btn-primary btn-full">
+                Create Account
+              </button>
+            </form>
+            <p class="auth-switch">
+              Already have an account?
+              <button class="link-btn" id="show-login">Sign in</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App (shown when logged in) -->
+    <div id="app-container" class="hidden">
+      <!-- Top Nav -->
+      <nav class="topnav">
+        <div class="nav-brand">
+          <img
+            src="/public/images/SatisficingMealsLogo.png"
+            alt="SatisficingMeals"
+            class="nav-logo-img"
+          />
+        </div>
+        <div class="nav-links">
+          <button class="nav-btn active" data-page="dashboard">
+            Dashboard
+          </button>
+          <button class="nav-btn" data-page="pantry">Pantry</button>
+          <button class="nav-btn" data-page="recipes">Recipes</button>
+          <button class="nav-btn" data-page="shopping">Shopping</button>
+        </div>
+        <div class="nav-user">
+          <span id="nav-username"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Sign Out</button>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <main class="main-content">
+        <!-- Dashboard Page -->
+        <section id="page-dashboard" class="page active">
+          <div class="page-header">
+            <h1>
+              Good <span id="greeting-time"></span>,
+              <span id="greeting-name"></span>
+            </h1>
+            <p class="subtitle">Here's what's happening in your kitchen.</p>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Expiring Soon -->
+            <div class="dashboard-card expiring-card">
+              <div class="card-header">
+                <h3>⏰ Expiring Soon</h3>
+                <span class="card-badge" id="expiring-count">0</span>
+              </div>
+              <div id="expiring-list" class="expiring-list">
+                <p class="empty-state">Nothing expiring soon!</p>
+              </div>
+            </div>
+
+            <!-- Quick Recipe Pick -->
+            <div class="dashboard-card recipe-card">
+              <div class="card-header">
+                <h3>🍳 Cook This Tonight</h3>
+              </div>
+              <div id="top-recipe" class="top-recipe">
+                <p class="empty-state">
+                  Add pantry items to get recipe suggestions.
+                </p>
+              </div>
+            </div>
+
+            <!-- Purchase Stats -->
+            <div class="dashboard-card stats-card">
+              <div class="card-header">
+                <h3>📊 Most Bought</h3>
+              </div>
+              <div id="top-purchases" class="purchases-list">
+                <p class="empty-state">No purchase history yet.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pantry Page -->
+        <section id="page-pantry" class="page hidden">
+          <div class="page-header">
+            <h1>My Pantry</h1>
+            <button class="btn btn-primary" id="add-pantry-btn">
+              + Add Item
+            </button>
+          </div>
+
+          <!-- Add Item Form -->
+          <div id="pantry-form-container" class="form-container hidden">
+            <form id="pantry-form" class="inline-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pantry-ingredient">Ingredient</label>
+                  <input
+                    type="text"
+                    id="pantry-ingredient"
+                    name="ingredient"
+                    required
+                    placeholder="e.g. chicken breast"
+                    list="ingredient-suggestions"
+                  />
+                  <datalist id="ingredient-suggestions"></datalist>
+                </div>
+                <div class="form-group form-group-sm">
+                  <label for="pantry-qty">Qty</label>
+                  <input
+                    type="number"
+                    id="pantry-qty"
+                    name="quantity"
+                    min="0.1"
+                    step="0.1"
+                    required
+                    value="1"
+                  />
+                </div>
+                <div class="form-group form-group-sm">
+                  <label for="pantry-unit">Unit</label>
+                  <select id="pantry-unit" name="unit">
+                    <option value="item">item(s)</option>
+                    <option value="g">grams (g)</option>
+                    <option value="kg">kilograms (kg)</option>
+                    <option value="ml">milliliters (ml)</option>
+                    <option value="L">liters (L)</option>
+                    <option value="cup">cup(s)</option>
+                    <option value="tbsp">tbsp</option>
+                    <option value="tsp">tsp</option>
+                    <option value="oz">oz</option>
+                    <option value="lb">lb</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="pantry-expiry"
+                    >Expiry Date
+                    <span class="optional">(auto-suggested)</span></label
+                  >
+                  <input
+                    type="text"
+                    id="pantry-expiry"
+                    name="expiration_date"
+                    placeholder="M/D/YY"
+                  />
+                </div>
+              </div>
+              <div id="pantry-wiki-preview" class="wiki-preview hidden"></div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  Add to Pantry
+                </button>
+                <button type="button" class="btn btn-ghost" id="cancel-pantry">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Pantry List -->
+          <div class="pantry-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="expiring-soon">
+              ⚠️ Expiring Soon
+            </button>
+            <button class="filter-btn" data-filter="expired">🔴 Expired</button>
+          </div>
+          <div id="pantry-list" class="pantry-grid">
+            <p class="empty-state">
+              Your pantry is empty. Add some ingredients!
+            </p>
+          </div>
+        </section>
+
+        <!-- Recipes Page -->
+        <section id="page-recipes" class="page hidden">
+          <div class="page-header">
+            <h1>Recipe Suggestions</h1>
+            <p class="subtitle">Based on what's in your pantry.</p>
+          </div>
+          <div id="recipes-list" class="recipes-grid">
+            <p class="empty-state">Loading recipes...</p>
+          </div>
+        </section>
+
+        <!-- Shopping Page -->
+        <section id="page-shopping" class="page hidden">
+          <div class="page-header">
+            <h1>Shopping Lists</h1>
+            <button class="btn btn-primary" id="new-list-btn">
+              + New List
+            </button>
+          </div>
+
+          <!-- New List Form -->
+          <div id="shopping-form-container" class="form-container hidden">
+            <form id="shopping-form" class="inline-form">
+              <div class="form-group">
+                <label for="list-name">List Name</label>
+                <input
+                  type="text"
+                  id="list-name"
+                  name="name"
+                  required
+                  placeholder="e.g. Weekly Groceries"
+                />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  Create List
+                </button>
+                <button type="button" class="btn btn-ghost" id="cancel-list">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div id="shopping-lists" class="shopping-lists">
+            <p class="empty-state">No shopping lists yet. Create one!</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Wikipedia Modal -->
+    <div id="wiki-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <button class="modal-close" id="wiki-close">✕</button>
+        <div id="wiki-content"></div>
+      </div>
+    </div>
+
+    <!-- Edit Pantry Item Modal -->
+    <div id="edit-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-sm">
+        <button class="modal-close" id="edit-close">✕</button>
+        <h3>Edit Item</h3>
+        <form id="edit-form">
+          <input type="hidden" id="edit-id" />
+          <div class="form-group">
+            <label>Ingredient</label>
+            <input type="text" id="edit-ingredient" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quantity</label>
+              <input
+                type="number"
+                id="edit-qty"
+                min="0.1"
+                step="0.1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Unit</label>
+              <select id="edit-unit">
+                <option value="item">item(s)</option>
+                <option value="g">grams (g)</option>
+                <option value="kg">kilograms (kg)</option>
+                <option value="ml">milliliters (ml)</option>
+                <option value="L">liters (L)</option>
+                <option value="cup">cup(s)</option>
+                <option value="tbsp">tbsp</option>
+                <option value="tsp">tsp</option>
+                <option value="oz">oz</option>
+                <option value="lb">lb</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <input type="text" id="edit-expiry" placeholder="M/D/YY" />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+/* ─── Pantry Grid ────────────────────────────────────────────────── */
+.pantry-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--warm-white);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--ink-muted);
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  border-color: var(--sage);
+  color: var(--sage-dark);
+}
+
+.filter-btn.active {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: white;
+  font-weight: 500;
+}
+
+.pantry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+/* ─── Pantry Item Card ───────────────────────────────────────────── */
+.pantry-item {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.pantry-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.pantry-item.expiring-soon {
+  border-color: var(--amber);
+  background: linear-gradient(135deg, var(--warm-white) 60%, var(--amber-light));
+}
+
+.pantry-item.expiring-critical {
+  border-color: var(--terracotta);
+  background: linear-gradient(135deg, var(--warm-white) 60%, var(--terracotta-light));
+}
+
+.pantry-item.expired {
+  border-color: var(--red);
+  opacity: 0.75;
+}
+
+.pantry-item-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pantry-ingredient {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pantry-qty {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  background: var(--cream);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.pantry-item-meta {
+  display: flex;
+  align-items: center;
+}
+
+.pantry-expiry {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.pantry-expiry.expiring-soon {
+  color: #8a6a1a;
+  font-weight: 500;
+}
+
+.pantry-expiry.expiring-critical {
+  color: var(--terracotta);
+  font-weight: 600;
+}
+
+.pantry-expiry.expired {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.pantry-item-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Ingredient autocomplete hint ──────────────────────────────── */
+.wiki-preview {
+  background: var(--sage-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: var(--sage-dark);
+}
