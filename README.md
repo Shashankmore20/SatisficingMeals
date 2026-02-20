@@ -22,10 +22,14 @@ The app goes beyond tracking. It suggests meals you can make with what you alrea
 
 | View | Screenshot |
 | ---- | ---------- |
-| Dashboard | ADD |
-| Pantry | ADD |
-| Recipes | ADD |
-| Shopping | ADD |
+| Login | ![Login](./screenshots/LoginScreen.png) |
+| Dashboard | ![Dashbaord](./screenshots/Dashboard.png) |
+| Pantry | ![Pantry](./screenshots/Pantry.png) |
+| AddItem | ![AddItem](./screenshots/AddItem.png) |
+| Wiki | ![Wiki](./screenshots/Wiki.png) |
+| Recipes | ![Recipes](./screenshots/Recipes.png) |
+| CookingInstructions | ![CookingInstructions](./screenshots/CookingInstructions.png) |
+| ShoppingLists | ![ShoppingLists](./screenshots/ShoppingLists.png) |
 
 ---
 
