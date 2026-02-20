@@ -35,7 +35,7 @@ The app goes beyond tracking. It suggests meals you can make with what you alrea
 
 ## Video Demonstration
 
-[Watch Video Demo](ADD_LINK)
+[Watch Video Demo](https://drive.google.com/file/d/1eb5GrJaIUBDCEL1qh0a8BozlK1JeDiY-/view?usp=drive_link)
 
 ---
 
@@ -115,7 +115,7 @@ The app goes beyond tracking. It suggests meals you can make with what you alrea
 | MIT License | ✔ [LICENSE](./LICENSE) |
 | No leftover unused code | ✔ No default routes or unused files |
 | Google Form submission correct | ✔ Thumbnail + links verified |
-| Short narrated demo video | [Watch Here](ADD_LINK) |
+| Short narrated demo video | [Watch Here](https://drive.google.com/file/d/1eb5GrJaIUBDCEL1qh0a8BozlK1JeDiY-/view?usp=drive_link) |
 | Code frozen on time | ✔ 24 hours before class |
 | Backend uses ES Modules only (no require) | ✔ All files use `import/export` |
 | No Mongoose or template engines | ✔ Native MongoDB driver only |
