@@ -21,7 +21,7 @@ export async function showWikiModal(ingredient) {
         </div>
       </div>
     `;
-  } catch (err) {
+  } catch (_err) {
     content.innerHTML = `
       <div class="wiki-error">
         <p>No Wikipedia article found for "${ingredient}".</p>

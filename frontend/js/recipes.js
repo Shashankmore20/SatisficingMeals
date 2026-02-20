@@ -224,7 +224,7 @@ async function showPrepModal(recipeName) {
           .join("")}
       </div>
     `;
-  } catch (err) {
+  } catch (_err) {
     contentEl.innerHTML = `
       <h3 class="prep-modal-title">🌙 Prep Instructions</h3>
       <p class="prep-error">Failed to load prep instructions.</p>
@@ -288,7 +288,7 @@ async function showInstructionsModal(recipeName) {
           .join("")}
       </div>
     `;
-  } catch (err) {
+  } catch (_err) {
     contentEl.innerHTML = `
       <h3 class="prep-modal-title">📋 Cooking Instructions</h3>
       <p class="prep-error">Failed to load cooking instructions.</p>
