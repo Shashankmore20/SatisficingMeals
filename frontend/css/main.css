@@ -934,3 +934,83 @@ img {
 .prep-error {
   color: var(--red);
 }
+
+/* ─── Cooking Instructions Modal ─────────────────────────────────── */
+.cooking-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cooking-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--cream);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.cooking-step-num {
+  width: 32px;
+  height: 32px;
+  background: var(--sage);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cooking-step-text {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  padding-top: 4px;
+}
+
+.missing-items-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.missing-items-list li {
+  padding: 8px 12px;
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.missing-items-list li::before {
+  content: "🛒 ";
+}
+
+.missing-list-name {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.missing-list-name:focus {
+  border-color: var(--sage);
+  box-shadow: 0 0 0 3px rgba(122, 143, 122, 0.15);
+}
+
+/* ─── Recipe actions row ─────────────────────────────────────────── */
+.recipe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding-top: 4px;
+}
