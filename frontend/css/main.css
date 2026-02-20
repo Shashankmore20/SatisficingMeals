@@ -477,6 +477,199 @@ img {
   color: var(--sage-dark);
 }
 
+/* ─── Goal Banner ────────────────────────────────────────────────── */
+.goal-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #5a4a3f 0%, #7a6a5f 100%);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.goal-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.goal-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+  margin-bottom: 3px;
+}
+
+.goal-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+
+/* ─── Recipe of the Day ──────────────────────────────────────────── */
+.rotd-card {
+  margin-bottom: 20px;
+}
+
+.card-subtle {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.rotd-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rotd-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rotd-badge {
+  background: #5a4a3f;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.rotd-match {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+  background: var(--sage-light);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.rotd-name {
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.rotd-desc {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.rotd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rotd-pill {
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--cream);
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+
+.rotd-pill.prep {
+  background: var(--amber-light);
+  color: #8a6a1a;
+  border-color: var(--amber);
+}
+.rotd-pill.have {
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  border-color: var(--sage);
+}
+.rotd-pill.missing {
+  background: var(--terracotta-light);
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.rotd-pill.ready {
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  border-color: var(--sage);
+  font-weight: 600;
+}
+
+.rotd-missing {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  background: var(--cream);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+}
+
+.rotd-missing-label {
+  font-weight: 600;
+  margin-right: 6px;
+  color: var(--ink-soft);
+}
+
+.rotd-action {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* ─── Quick Actions ──────────────────────────────────────────────── */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  text-align: left;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.quick-action-btn:hover {
+  background: var(--sage-light);
+  border-color: var(--sage);
+  color: var(--sage-dark);
+}
+
+.qa-icon {
+  font-size: 1.1rem;
+}
+
+/* ─── Purchase rank ──────────────────────────────────────────────── */
+.purchase-rank {
+  width: 20px;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+
 /* ─── Modals ─────────────────────────────────────────────────────── */
 .modal {
   position: fixed;
@@ -614,4 +807,130 @@ img {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* ─── Recipe of the Day Grid ─────────────────────────────────────── */
+.rotd-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.rotd-card-item {
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.15s;
+}
+
+.rotd-card-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.rotd-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rotd-ingredients {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  background: var(--warm-white);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  line-height: 1.5;
+}
+
+.rotd-ing-label {
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .rotd-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Prep Instructions Modal ────────────────────────────────────── */
+.prep-modal-title {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.prep-modal-recipe {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink-muted);
+  font-style: italic;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.prep-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prep-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--cream);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.prep-step-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #5a4a3f;
+  color: white;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.prep-hours {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.prep-ahead {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prep-step-text {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  padding-top: 4px;
+}
+
+.prep-loading,
+.prep-empty,
+.prep-error {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  padding: 24px 0;
+  font-style: italic;
+}
+
+.prep-error {
+  color: var(--red);
 }

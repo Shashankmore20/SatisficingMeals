@@ -1,7 +1,7 @@
 /* ─── Shopping Lists ─────────────────────────────────────────────── */
 .shopping-lists {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
   gap: 20px;
 }
 
@@ -290,4 +290,65 @@
   padding: 5px 14px;
   border-radius: 20px;
   width: fit-content;
+}
+
+/* ─── Inline Add Item Form ───────────────────────────────────────── */
+.add-item-form {
+  border-top: 1.5px dashed var(--border);
+  padding-top: 14px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-item-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.add-item-row .form-group label {
+  font-size: 0.8rem;
+}
+
+.add-item-row .form-group input,
+.add-item-row .form-group select {
+  padding: 8px 10px;
+  font-size: 0.88rem;
+}
+
+.list-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shopping-empty {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: 8px 10px;
+  list-style: none;
+}
+
+.item-delete {
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+}
+
+.shopping-item:hover .item-delete {
+  opacity: 1;
+}
+
+.item-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.1s;
 }

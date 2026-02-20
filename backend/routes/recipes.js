@@ -8,11 +8,29 @@ const router = Router();
 router.get("/", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
-    const recipes = await db.collection("all_possible_recipes").find({}).toArray();
+    const recipes = await db
+      .collection("all_possible_recipes")
+      .find({})
+      .toArray();
     res.json(recipes);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch recipes." });
+  }
+});
+
+// GET /api/recipes/daily - 3 random recipes for the day
+router.get("/daily", requireAuth, async (req, res) => {
+  try {
+    const db = await getDB();
+    const recipes = await db
+      .collection("all_possible_recipes")
+      .aggregate([{ $sample: { size: 3 } }])
+      .toArray();
+    res.json(recipes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch daily recipes." });
   }
 });
 
@@ -24,19 +42,28 @@ router.get("/suggestions", requireAuth, async (req, res) => {
     // Get user's pantry
     const pantryItems = await db
       .collection("pantry_items")
-      .find({ userId: req.session.userId })
+      .find({ username: req.session.username })
       .toArray();
 
-    const pantryIngredients = pantryItems.map((item) => item.ingredient.toLowerCase());
+    const pantryIngredients = pantryItems.map((item) =>
+      item.ingredient.toLowerCase(),
+    );
 
     // Get all recipes
-    const recipes = await db.collection("all_possible_recipes").find({}).toArray();
+    const recipes = await db
+      .collection("all_possible_recipes")
+      .find({})
+      .toArray();
 
     // Score each recipe
     const scored = recipes.map((recipe) => {
       const recipeIngredients = recipe.Ingredients.map((i) => i.toLowerCase());
-      const have = recipeIngredients.filter((i) => pantryIngredients.includes(i));
-      const missing = recipeIngredients.filter((i) => !pantryIngredients.includes(i));
+      const have = recipeIngredients.filter((i) =>
+        pantryIngredients.includes(i),
+      );
+      const missing = recipeIngredients.filter(
+        (i) => !pantryIngredients.includes(i),
+      );
       const score = have.length / recipeIngredients.length;
 
       // Check if any pantry items used are expiring soon

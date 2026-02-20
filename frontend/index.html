@@ -194,15 +194,38 @@
         <!-- Dashboard Page -->
         <section id="page-dashboard" class="page active">
           <div class="page-header">
-            <h1>
-              Good <span id="greeting-time"></span>,
-              <span id="greeting-name"></span>
-            </h1>
-            <p class="subtitle">Here's what's happening in your kitchen.</p>
+            <div>
+              <h1>
+                Good <span id="greeting-time"></span>,
+                <span id="greeting-name"></span> 👋
+              </h1>
+              <p class="subtitle">Here's what's happening in your kitchen.</p>
+            </div>
           </div>
 
+          <!-- Goal Banner (hidden until loaded) -->
+          <div id="user-goal-card" class="goal-banner hidden">
+            <span class="goal-icon">🎯</span>
+            <div class="goal-text">
+              <span class="goal-label">Your cooking goal</span>
+              <span id="user-goal-text" class="goal-value"></span>
+            </div>
+          </div>
+
+          <!-- Recipe of the Day - full width -->
+          <div class="dashboard-card rotd-card">
+            <div class="card-header">
+              <h3>🍽️ Recipes of the Day</h3>
+            </div>
+            <div id="recipe-of-day">
+              <p class="empty-state">
+                Add pantry items to get a recipe suggestion.
+              </p>
+            </div>
+          </div>
+
+          <!-- Bottom row: 3 cards -->
           <div class="dashboard-grid">
-            <!-- Expiring Soon -->
             <div class="dashboard-card expiring-card">
               <div class="card-header">
                 <h3>⏰ Expiring Soon</h3>
@@ -213,25 +236,41 @@
               </div>
             </div>
 
-            <!-- Quick Recipe Pick -->
-            <div class="dashboard-card recipe-card">
-              <div class="card-header">
-                <h3>🍳 Cook This Tonight</h3>
-              </div>
-              <div id="top-recipe" class="top-recipe">
-                <p class="empty-state">
-                  Add pantry items to get recipe suggestions.
-                </p>
-              </div>
-            </div>
-
-            <!-- Purchase Stats -->
             <div class="dashboard-card stats-card">
               <div class="card-header">
                 <h3>📊 Most Bought</h3>
               </div>
               <div id="top-purchases" class="purchases-list">
                 <p class="empty-state">No purchase history yet.</p>
+              </div>
+            </div>
+
+            <div class="dashboard-card tips-card">
+              <div class="card-header">
+                <h3>💡 Quick Actions</h3>
+              </div>
+              <div class="quick-actions">
+                <button
+                  class="quick-action-btn"
+                  onclick="window.navigateTo('pantry')"
+                >
+                  <span class="qa-icon">📦</span>
+                  <span>Add to Pantry</span>
+                </button>
+                <button
+                  class="quick-action-btn"
+                  onclick="window.navigateTo('shopping')"
+                >
+                  <span class="qa-icon">🛒</span>
+                  <span>New Shopping List</span>
+                </button>
+                <button
+                  class="quick-action-btn"
+                  onclick="window.navigateTo('recipes')"
+                >
+                  <span class="qa-icon">🍳</span>
+                  <span>Browse Recipes</span>
+                </button>
               </div>
             </div>
           </div>
@@ -250,7 +289,7 @@
           <div id="pantry-form-container" class="form-container hidden">
             <form id="pantry-form" class="inline-form">
               <div class="form-row">
-                <div class="form-group">
+                <div class="form-group" style="position: relative">
                   <label for="pantry-ingredient">Ingredient</label>
                   <input
                     type="text"
@@ -258,9 +297,12 @@
                     name="ingredient"
                     required
                     placeholder="e.g. chicken breast"
-                    list="ingredient-suggestions"
+                    autocomplete="off"
                   />
-                  <datalist id="ingredient-suggestions"></datalist>
+                  <ul
+                    id="ingredient-dropdown"
+                    class="ingredient-dropdown hidden"
+                  ></ul>
                 </div>
                 <div class="form-group form-group-sm">
                   <label for="pantry-qty">Qty</label>
@@ -377,7 +419,73 @@
             <p class="empty-state">No shopping lists yet. Create one!</p>
           </div>
         </section>
+
+        <!-- Add Item Form Template -->
+        <template id="add-item-form-template">
+          <div class="add-item-form hidden">
+            <div class="add-item-row">
+              <div class="form-group" style="position: relative; flex: 2">
+                <label>Item</label>
+                <input
+                  type="text"
+                  class="add-item-ingredient"
+                  placeholder="e.g. olive oil"
+                  autocomplete="off"
+                />
+                <ul class="ingredient-dropdown hidden"></ul>
+              </div>
+              <div class="form-group" style="flex: 0.6">
+                <label>Qty</label>
+                <input
+                  type="number"
+                  class="add-item-qty"
+                  min="0.1"
+                  step="0.1"
+                  value="1"
+                />
+              </div>
+              <div class="form-group" style="flex: 0.8">
+                <label>Unit</label>
+                <select class="add-item-unit">
+                  <option value="item">item(s)</option>
+                  <option value="g">grams (g)</option>
+                  <option value="kg">kilograms (kg)</option>
+                  <option value="ml">milliliters (ml)</option>
+                  <option value="L">liters (L)</option>
+                  <option value="cup">cup(s)</option>
+                  <option value="tbsp">tbsp</option>
+                  <option value="tsp">tsp</option>
+                  <option value="oz">oz</option>
+                  <option value="lb">lb</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm add-item-submit"
+              >
+                Add Item
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm add-item-cancel"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </template>
       </main>
+    </div>
+
+    <!-- Prep Instructions Modal -->
+    <div id="prep-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-sm">
+        <button class="modal-close" id="prep-close">✕</button>
+        <div id="prep-modal-content"></div>
+      </div>
     </div>
 
     <!-- Wikipedia Modal -->

@@ -45,7 +45,9 @@
   flex-direction: column;
   gap: 10px;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s;
 }
 
 .pantry-item:hover {
@@ -54,12 +56,20 @@
 
 .pantry-item.expiring-soon {
   border-color: var(--amber);
-  background: linear-gradient(135deg, var(--warm-white) 60%, var(--amber-light));
+  background: linear-gradient(
+    135deg,
+    var(--warm-white) 60%,
+    var(--amber-light)
+  );
 }
 
 .pantry-item.expiring-critical {
   border-color: var(--terracotta);
-  background: linear-gradient(135deg, var(--warm-white) 60%, var(--terracotta-light));
+  background: linear-gradient(
+    135deg,
+    var(--warm-white) 60%,
+    var(--terracotta-light)
+  );
 }
 
 .pantry-item.expired {
@@ -121,6 +131,53 @@
   justify-content: flex-end;
   padding-top: 4px;
   border-top: 1px solid var(--border);
+}
+
+/* ─── Ingredient Autocomplete Dropdown ───────────────────────────── */
+.ingredient-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  z-index: 200;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.ingredient-option {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.1s;
+}
+
+.ingredient-option:hover {
+  background: var(--sage-light);
+  color: var(--sage-dark);
+}
+
+.ingredient-option:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.ing-match {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.ing-match strong {
+  color: var(--sage-dark);
+  font-weight: 600;
 }
 
 /* ─── Ingredient autocomplete hint ──────────────────────────────── */

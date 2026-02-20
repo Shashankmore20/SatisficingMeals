@@ -87,7 +87,9 @@ function renderPantry() {
 function setupFilters() {
   document.querySelectorAll(".filter-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".filter-btn")
+        .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       currentFilter = btn.dataset.filter;
       renderPantry();
@@ -102,6 +104,7 @@ function setupPantryForm() {
   const form = document.getElementById("pantry-form");
   const ingredientInput = document.getElementById("pantry-ingredient");
   const expiryInput = document.getElementById("pantry-expiry");
+  const dropdown = document.getElementById("ingredient-dropdown");
 
   addBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
@@ -111,55 +114,120 @@ function setupPantryForm() {
   cancelBtn.addEventListener("click", () => {
     formContainer.classList.add("hidden");
     form.reset();
+    dropdown.classList.add("hidden");
   });
 
-  // Auto-suggest expiry when ingredient is entered
+  // ── Autocomplete ──
   let debounceTimer;
-  ingredientInput.addEventListener("input", () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(async () => {
-      const val = ingredientInput.value.trim();
-      if (val.length < 2) return;
+  let selectedFromDropdown = false;
 
+  ingredientInput.addEventListener("input", () => {
+    selectedFromDropdown = false;
+    clearTimeout(debounceTimer);
+    const val = ingredientInput.value.trim();
+
+    if (val.length < 1) {
+      dropdown.classList.add("hidden");
+      return;
+    }
+
+    debounceTimer = setTimeout(async () => {
       try {
-        const { expiration_date } = await api.suggestExpiry(val);
-        if (expiration_date && !expiryInput.value) {
-          expiryInput.value = expiration_date;
-          expiryInput.placeholder = `Suggested: ${expiration_date}`;
+        const results = await api.searchIngredients(val);
+        if (results.length === 0) {
+          dropdown.classList.add("hidden");
+          return;
         }
+
+        dropdown.innerHTML = results
+          .map(
+            (ing) =>
+              `<li class="ingredient-option" data-value="${ing}">
+                ${capitalize(ing)}
+                ${ing.toLowerCase() === val.toLowerCase() ? "" : `<span class="ing-match">${highlightMatch(ing, val)}</span>`}
+              </li>`,
+          )
+          .join("");
+
+        dropdown.classList.remove("hidden");
+
+        dropdown.querySelectorAll(".ingredient-option").forEach((li) => {
+          li.addEventListener("mousedown", async (e) => {
+            e.preventDefault();
+            const chosen = li.dataset.value;
+            ingredientInput.value = chosen;
+            selectedFromDropdown = true;
+            dropdown.classList.add("hidden");
+
+            // Auto-fill expiry: 2 weeks from today
+            if (!expiryInput.value) {
+              expiryInput.value = twoWeeksFromToday();
+            }
+          });
+        });
       } catch {
-        // Ingredient not in DB, that's fine
+        dropdown.classList.add("hidden");
       }
-    }, 400);
+    }, 250);
   });
 
+  // Hide dropdown on blur, auto-fill expiry if still empty
+  ingredientInput.addEventListener("blur", () => {
+    setTimeout(() => dropdown.classList.add("hidden"), 150);
+    const val = ingredientInput.value.trim();
+    if (val && !expiryInput.value) {
+      expiryInput.value = twoWeeksFromToday();
+    }
+  });
+
+  // ── Submit ──
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    dropdown.classList.add("hidden");
+
     const ingredient = ingredientInput.value.trim();
     const quantity = document.getElementById("pantry-qty").value;
     const unit = document.getElementById("pantry-unit").value;
     const expiration_date = expiryInput.value.trim();
 
     try {
-      // Check if ingredient exists, offer to add if not
-      const result = await api.suggestExpiry(ingredient);
-      if (result.expiration_date === null) {
-        const add = confirm(
-          `"${ingredient}" isn't in our database yet. Add it with this expiry date? You can leave expiry blank.`
-        );
-        if (add) {
-          await api.addIngredient({ ingredient, expiration_date: expiration_date || null });
-        }
+      // If user typed something not selected from dropdown, add it to DB silently
+      if (!selectedFromDropdown) {
+        await api.addIngredient({
+          ingredient,
+          expiration_date: expiration_date || null,
+        });
       }
 
-      await api.addPantryItem({ ingredient, quantity, unit, expiration_date: expiration_date || null });
+      await api.addPantryItem({
+        ingredient,
+        quantity,
+        unit,
+        expiration_date: expiration_date || null,
+      });
       form.reset();
       formContainer.classList.add("hidden");
+      selectedFromDropdown = false;
       await loadPantry();
     } catch (err) {
       alert(`Error: ${err.message}`);
     }
   });
+}
+
+function twoWeeksFromToday() {
+  const d = new Date();
+  d.setDate(d.getDate() + 14);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const yr = String(d.getFullYear()).slice(-2);
+  return `${m}/${day}/${yr}`;
+}
+
+function highlightMatch(ingredient, query) {
+  const idx = ingredient.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return "";
+  return `…${ingredient.slice(Math.max(0, idx - 2), idx)}<strong>${ingredient.slice(idx, idx + query.length)}</strong>${ingredient.slice(idx + query.length, idx + query.length + 6)}`;
 }
 
 // Global functions called from inline onclick
@@ -196,7 +264,9 @@ export function setupEditModal() {
   const form = document.getElementById("edit-form");
 
   closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-  modal.querySelector(".modal-backdrop").addEventListener("click", () => modal.classList.add("hidden"));
+  modal
+    .querySelector(".modal-backdrop")
+    .addEventListener("click", () => modal.classList.add("hidden"));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();

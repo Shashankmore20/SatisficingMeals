@@ -32,23 +32,30 @@ export const api = {
   updatePantryItem: (id, body) => request("PUT", `/pantry/${id}`, body),
   deletePantryItem: (id) => request("DELETE", `/pantry/${id}`),
   getExpiring: () => request("GET", "/pantry/expiring"),
-  suggestExpiry: (ingredient) => request("GET", `/pantry/suggest-expiry/${encodeURIComponent(ingredient)}`),
+  suggestExpiry: (ingredient) =>
+    request("GET", `/pantry/suggest-expiry/${encodeURIComponent(ingredient)}`),
+  searchIngredients: (q) =>
+    request("GET", `/pantry/search-ingredients?q=${encodeURIComponent(q)}`),
   addIngredient: (body) => request("POST", "/pantry/add-ingredient", body),
 
   // Recipes
   getRecipes: () => request("GET", "/recipes"),
+  getDailyRecipes: () => request("GET", "/recipes/daily"),
   getRecipeSuggestions: () => request("GET", "/recipes/suggestions"),
-  getRecipePrep: (name) => request("GET", `/recipes/${encodeURIComponent(name)}/prep`),
+  getRecipePrep: (name) =>
+    request("GET", `/recipes/${encodeURIComponent(name)}/prep`),
 
   // Shopping
   getShoppingLists: () => request("GET", "/shopping"),
   createShoppingList: (body) => request("POST", "/shopping", body),
   updateShoppingList: (id, body) => request("PUT", `/shopping/${id}`, body),
   deleteShoppingList: (id) => request("DELETE", `/shopping/${id}`),
-  toggleShoppingItem: (id, idx) => request("POST", `/shopping/${id}/check/${idx}`),
+  toggleShoppingItem: (id, idx) =>
+    request("POST", `/shopping/${id}/check/${idx}`),
   moveToPantry: (id) => request("POST", `/shopping/${id}/move-to-pantry`),
   getPurchaseHistory: () => request("GET", "/shopping/history"),
 
   // Wikipedia
-  getWikipedia: (term) => request("GET", `/wikipedia/${encodeURIComponent(term)}`),
+  getWikipedia: (term) =>
+    request("GET", `/wikipedia/${encodeURIComponent(term)}`),
 };

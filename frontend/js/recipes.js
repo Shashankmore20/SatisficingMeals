@@ -25,7 +25,12 @@ async function loadRecipeSuggestions() {
 
 function renderRecipeCard(recipe) {
   const scorePercent = Math.round(recipe.score * 100);
-  const scoreColor = scorePercent >= 75 ? "score-high" : scorePercent >= 40 ? "score-mid" : "score-low";
+  const scoreColor =
+    scorePercent >= 75
+      ? "score-high"
+      : scorePercent >= 40
+        ? "score-mid"
+        : "score-low";
 
   return `
     <div class="recipe-card ${recipe.usesExpiring ? "uses-expiring" : ""}">
@@ -75,13 +80,20 @@ function renderRecipeCard(recipe) {
 }
 
 window.addMissingToList = async (recipeName, missing) => {
-  const listName = prompt(`Create a new shopping list for "${recipeName}"?`, `${recipeName} ingredients`);
+  const listName = prompt(
+    `Create a new shopping list for "${recipeName}"?`,
+    `${recipeName} ingredients`,
+  );
   if (!listName) return;
 
   try {
     await api.createShoppingList({
       name: listName,
-      items: missing.map((ing) => ({ ingredient: ing, quantity: 1, unit: "item" })),
+      items: missing.map((ing) => ({
+        ingredient: ing,
+        quantity: 1,
+        unit: "item",
+      })),
     });
     alert(`Shopping list "${listName}" created!`);
   } catch (err) {
@@ -90,22 +102,64 @@ window.addMissingToList = async (recipeName, missing) => {
 };
 
 window.showPrepInstructions = async (recipeName) => {
+  const modal = document.getElementById("prep-modal");
+  const contentEl = document.getElementById("prep-modal-content");
+
+  // Show loading state immediately
+  contentEl.innerHTML = `
+    <h3 class="prep-modal-title">🌙 Prep Instructions</h3>
+    <p class="prep-modal-recipe">${recipeName}</p>
+    <p class="prep-loading">Loading...</p>
+  `;
+  modal.classList.remove("hidden");
+
   try {
     const prep = await api.getRecipePrep(recipeName);
+
     if (prep.length === 0) {
-      alert(`No specific prep instructions found for ${recipeName}.`);
+      contentEl.innerHTML = `
+        <h3 class="prep-modal-title">🌙 Prep Instructions</h3>
+        <p class="prep-modal-recipe">${recipeName}</p>
+        <p class="prep-empty">No specific prep instructions for this recipe.</p>
+      `;
       return;
     }
 
-    const instructions = prep
-      .map((p) => `• ${p.Instruction} (${p.hours_ahead} hours ahead)`)
-      .join("\n");
-
-    alert(`Prep instructions for ${recipeName}:\n\n${instructions}`);
+    contentEl.innerHTML = `
+      <h3 class="prep-modal-title">🌙 Prep Instructions</h3>
+      <p class="prep-modal-recipe">${recipeName}</p>
+      <div class="prep-steps">
+        ${prep
+          .map(
+            (p) => `
+          <div class="prep-step">
+            <div class="prep-step-time">
+              <span class="prep-hours">${p.hours_ahead}h</span>
+              <span class="prep-ahead">ahead</span>
+            </div>
+            <div class="prep-step-text">${p.Instruction}</div>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    `;
   } catch (err) {
-    alert(`Error: ${err.message}`);
+    contentEl.innerHTML = `
+      <h3 class="prep-modal-title">🌙 Prep Instructions</h3>
+      <p class="prep-error">Failed to load prep instructions.</p>
+    `;
   }
 };
+
+export function setupPrepModal() {
+  const modal = document.getElementById("prep-modal");
+  const closeBtn = document.getElementById("prep-close");
+  closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+  modal
+    .querySelector(".modal-backdrop")
+    .addEventListener("click", () => modal.classList.add("hidden"));
+}
 
 export async function getTopRecipe() {
   try {

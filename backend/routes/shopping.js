@@ -61,10 +61,12 @@ router.put("/:id", requireAuth, async (req, res) => {
     if (name !== undefined) update.name = name;
     if (items !== undefined) update.items = items;
 
-    const result = await db.collection("shopping_lists").updateOne(
-      { _id: new ObjectId(req.params.id), userId: req.session.userId },
-      { $set: update }
-    );
+    const result = await db
+      .collection("shopping_lists")
+      .updateOne(
+        { _id: new ObjectId(req.params.id), userId: req.session.userId },
+        { $set: update },
+      );
 
     if (result.matchedCount === 0) {
       return res.status(404).json({ error: "List not found." });
@@ -116,10 +118,12 @@ router.post("/:id/check/:itemIndex", requireAuth, async (req, res) => {
     const updatedItems = [...list.items];
     updatedItems[idx].checked = !updatedItems[idx].checked;
 
-    await db.collection("shopping_lists").updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $set: { items: updatedItems } }
-    );
+    await db
+      .collection("shopping_lists")
+      .updateOne(
+        { _id: new ObjectId(req.params.id) },
+        { $set: { items: updatedItems } },
+      );
 
     res.json({ message: "Item toggled.", checked: updatedItems[idx].checked });
   } catch (err) {
@@ -153,7 +157,7 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
         .findOne({ ingredient: item.ingredient });
 
       await db.collection("pantry_items").insertOne({
-        userId: req.session.userId,
+        username: req.session.username,
         ingredient: item.ingredient,
         quantity: item.quantity,
         unit: item.unit,
@@ -162,7 +166,7 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
       });
 
       await db.collection("purchase_history").insertOne({
-        userId: req.session.userId,
+        username: req.session.username,
         ingredient: item.ingredient,
         date_added: now,
       });
@@ -170,12 +174,17 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
 
     // Remove checked items from shopping list
     const remainingItems = list.items.filter((item) => !item.checked);
-    await db.collection("shopping_lists").updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $set: { items: remainingItems } }
-    );
+    await db
+      .collection("shopping_lists")
+      .updateOne(
+        { _id: new ObjectId(req.params.id) },
+        { $set: { items: remainingItems } },
+      );
 
-    res.json({ message: `Moved ${checkedItems.length} item(s) to pantry.`, moved: checkedItems.length });
+    res.json({
+      message: `Moved ${checkedItems.length} item(s) to pantry.`,
+      moved: checkedItems.length,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to move items to pantry." });
@@ -191,8 +200,14 @@ router.get("/history", requireAuth, async (req, res) => {
     const history = await db
       .collection("purchase_history")
       .aggregate([
-        { $match: { userId: req.session.userId } },
-        { $group: { _id: "$ingredient", count: { $sum: 1 }, last_bought: { $max: "$date_added" } } },
+        { $match: { username: req.session.username } },
+        {
+          $group: {
+            _id: "$ingredient",
+            count: { $sum: 1 },
+            last_bought: { $max: "$date_added" },
+          },
+        },
         { $sort: { count: -1 } },
         { $limit: 10 },
       ])

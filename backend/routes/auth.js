@@ -11,7 +11,9 @@ router.post("/signup", async (req, res) => {
     const { name, username, password, goal } = req.body;
 
     if (!name || !username || !password) {
-      return res.status(400).json({ error: "Name, username, and password are required." });
+      return res
+        .status(400)
+        .json({ error: "Name, username, and password are required." });
     }
 
     const db = await getDB();
@@ -33,8 +35,11 @@ router.post("/signup", async (req, res) => {
     req.session.userId = result.insertedId.toString();
     req.session.username = username;
     req.session.name = name;
+    req.session.goal = goal || "";
 
-    res.status(201).json({ message: "Account created.", username, name });
+    res
+      .status(201)
+      .json({ message: "Account created.", username, name, goal: goal || "" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error during signup." });
@@ -47,7 +52,9 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required." });
+      return res
+        .status(400)
+        .json({ error: "Username and password are required." });
     }
 
     const db = await getDB();
@@ -64,8 +71,14 @@ router.post("/login", async (req, res) => {
     req.session.userId = user._id.toString();
     req.session.username = user.username;
     req.session.name = user.name;
+    req.session.goal = user.goal || "";
 
-    res.json({ message: "Logged in.", username: user.username, name: user.name });
+    res.json({
+      message: "Logged in.",
+      username: user.username,
+      name: user.name,
+      goal: user.goal || "",
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error during login." });
@@ -90,6 +103,7 @@ router.get("/me", (req, res) => {
     userId: req.session.userId,
     username: req.session.username,
     name: req.session.name,
+    goal: req.session.goal || "",
   });
 });
 

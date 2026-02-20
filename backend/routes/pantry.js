@@ -11,7 +11,7 @@ router.get("/", requireAuth, async (req, res) => {
     const db = await getDB();
     const items = await db
       .collection("pantry_items")
-      .find({ userId: req.session.userId })
+      .find({ username: req.session.username })
       .sort({ expiration_date: 1 })
       .toArray();
     res.json(items);
@@ -27,7 +27,9 @@ router.post("/", requireAuth, async (req, res) => {
     const { ingredient, quantity, unit, expiration_date } = req.body;
 
     if (!ingredient || !quantity || !unit) {
-      return res.status(400).json({ error: "Ingredient, quantity, and unit are required." });
+      return res
+        .status(400)
+        .json({ error: "Ingredient, quantity, and unit are required." });
     }
 
     const db = await getDB();
@@ -42,7 +44,7 @@ router.post("/", requireAuth, async (req, res) => {
     }
 
     const newItem = {
-      userId: req.session.userId,
+      username: req.session.username,
       ingredient: ingredient.toLowerCase(),
       quantity: Number(quantity),
       unit,
@@ -54,7 +56,7 @@ router.post("/", requireAuth, async (req, res) => {
 
     // Also log to purchase_history
     await db.collection("purchase_history").insertOne({
-      userId: req.session.userId,
+      username: req.session.username,
       ingredient: ingredient.toLowerCase(),
       date_added: new Date().toISOString(),
     });
@@ -78,10 +80,12 @@ router.put("/:id", requireAuth, async (req, res) => {
     if (unit !== undefined) update.unit = unit;
     if (expiration_date !== undefined) update.expiration_date = expiration_date;
 
-    const result = await db.collection("pantry_items").updateOne(
-      { _id: new ObjectId(req.params.id), userId: req.session.userId },
-      { $set: update }
-    );
+    const result = await db
+      .collection("pantry_items")
+      .updateOne(
+        { _id: new ObjectId(req.params.id), username: req.session.username },
+        { $set: update },
+      );
 
     if (result.matchedCount === 0) {
       return res.status(404).json({ error: "Item not found." });
@@ -100,7 +104,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
     const db = await getDB();
     const result = await db.collection("pantry_items").deleteOne({
       _id: new ObjectId(req.params.id),
-      userId: req.session.userId,
+      username: req.session.username,
     });
 
     if (result.deletedCount === 0) {
@@ -124,7 +128,7 @@ router.get("/expiring", requireAuth, async (req, res) => {
     const items = await db
       .collection("pantry_items")
       .find({
-        userId: req.session.userId,
+        username: req.session.username,
         expiration_date: { $ne: null },
       })
       .toArray();
@@ -136,7 +140,9 @@ router.get("/expiring", requireAuth, async (req, res) => {
       return exp >= now && exp <= sevenDaysOut;
     });
 
-    expiring.sort((a, b) => new Date(a.expiration_date) - new Date(b.expiration_date));
+    expiring.sort(
+      (a, b) => new Date(a.expiration_date) - new Date(b.expiration_date),
+    );
 
     res.json(expiring);
   } catch (err) {
@@ -164,11 +170,32 @@ router.get("/suggest-expiry/:ingredient", requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/pantry/search-ingredients?q=chick - search ingredients for autocomplete
+router.get("/search-ingredients", requireAuth, async (req, res) => {
+  try {
+    const q = req.query.q || "";
+    if (q.length < 1) return res.json([]);
+
+    const db = await getDB();
+    const results = await db
+      .collection("all_possible_ingredients")
+      .find({ ingredient: { $regex: q, $options: "i" } })
+      .limit(10)
+      .toArray();
+
+    res.json(results.map((r) => r.ingredient));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Search failed." });
+  }
+});
+
 // POST /api/pantry/add-ingredient - add to all_possible_ingredients if missing
 router.post("/add-ingredient", requireAuth, async (req, res) => {
   try {
     const { ingredient, expiration_date } = req.body;
-    if (!ingredient) return res.status(400).json({ error: "Ingredient name required." });
+    if (!ingredient)
+      return res.status(400).json({ error: "Ingredient name required." });
 
     const db = await getDB();
     const existing = await db
@@ -176,7 +203,10 @@ router.post("/add-ingredient", requireAuth, async (req, res) => {
       .findOne({ ingredient: ingredient.toLowerCase() });
 
     if (existing) {
-      return res.json({ message: "Ingredient already exists.", existing: true });
+      return res.json({
+        message: "Ingredient already exists.",
+        existing: true,
+      });
     }
 
     await db.collection("all_possible_ingredients").insertOne({
