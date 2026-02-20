@@ -1,83 +1,167 @@
-# SatisficingMeals - Track Your Groceries, Reduce Waste, Plan Meals, Never Forget What You Need
+# SatisficingMeals — Track Your Groceries, Reduce Waste, Plan Meals
 
-## Author: Shashank More and Sarah Gillespie
+## Author & Class Info
 
-## Class Link: CS5610 Project 2
+- **Authors:** [Shashank More](https://shashankmore20.github.io/cs5610-Project1/) & [Sarah Gillespie](https://sarahgillespie.github.io/sarah-gillespie-homepage/)
+- **Class:** CS5610 Web Development — Northeastern University
+- **Deployed:** [satisficingmeals.onrender.com](https://satisficingmeals.onrender.com/)
+- **GitHub:** [github.com/Shashankmore20/SatisficingMeals](https://github.com/Shashankmore20/SatisficingMeals)
+- **Slides:** [Google Slides](https://docs.google.com/presentation/d/1e2AYU5_qWhqYLUPDUOzLA5Z1_5bqZhFyau5e3wwjaNg/edit?usp=sharing)
 
-Link: https://satisficingmeals.onrender.com/
-
-Github: https://github.com/Shashankmore20/SatisficingMeals
-
-Slides: https://docs.google.com/presentation/d/1e2AYU5_qWhqYLUPDUOzLA5Z1_5bqZhFyau5e3wwjaNg/edit?usp=sharing
+---
 
 ## Project Objective
 
-SatisficingMeals solves the problem of uninspiring meals, busy weeknights, and food waste by helping users track what's in their pantry, when items expire, and recipes they can make. Users add items to their virtual pantry - the system suggests expiry dates automatically. The dashboard highlights items expiring soon so nothing goes to waste.
-The app goes beyond tracking. It suggests meals you can make with what you already have and generates a grocery list. It tracks leftovers with portion counts, suggests ingredient substitutions, and sends reminders for ingredient prep (like marinating tomorrow's chicken or setting pizza dough out to rise).
-Users can look up unfamiliar ingredients via Wikipedia to learn what they are and where they grow. The app also tracks purchase history to show frequently bought items and smart suggestions.
+SatisficingMeals solves the problem of uninspiring meals, busy weeknights, and food waste by helping users track what's in their pantry, when items expire, and recipes they can make. Users add items to their virtual pantry — the system suggests expiry dates automatically. The dashboard highlights items expiring soon so nothing goes to waste.
 
-## Visual
+The app goes beyond tracking. It suggests meals you can make with what you already have, generates a grocery list, and sends reminders for ingredient prep (like marinating tomorrow's chicken or setting pizza dough to rise). Users can look up unfamiliar ingredients via Wikipedia, and the app tracks purchase history to show frequently bought items.
 
-ADD
+---
 
-## Installation and Build
+## Screenshots
 
-See the included package.json file listing all the specific dependencies of the project. Prerequisites include Node.js, npm, and a running backend database (see backend/db/connection.js for configuration).
+| View | Screenshot |
+| ---- | ---------- |
+| Dashboard | ADD |
+| Pantry | ADD |
+| Recipes | ADD |
+| Shopping | ADD |
 
-### Installation Steps
+---
 
-After installing the dependencies, pull the repository.
+## Video Demonstration
 
-```
-git clone https://github.com/your-username/SatisficingMeals.git
-cd SatisficingMeals
-```
+[Watch Video Demo](ADD_LINK)
 
-### Instructions to build
+---
 
-In your terminal, start the server.
+## Instructions to Build / Run
 
-```
-node server.js
-```
+1. Clone the repository
 
-A successful result will look something like
+   ```bash
+   git clone https://github.com/Shashankmore20/SatisficingMeals.git
+   cd SatisficingMeals
+   ```
 
-> Connected to MongoDB: satisficingmeals
-> SatisficingMeals running on http://localhost:3000
+2. Install dependencies
 
-In your preferred web browser, paste in the outputted link, such http://localhost:3000
+   ```bash
+   npm install
+   ```
 
-This will bring up a locally hosted version of the webpage
+3. Set up environment variables
 
-## Contributing
+   ```bash
+   cp .env.example .env
+   # Edit .env with your MongoDB URI, session secret, and Pexels API key
+   ```
 
-Pull requests are welcome: follow the standard Github process and the authors will review at their earliest convenience.
+4. Start the server
 
-## License: [MIT License](https://choosealicense.com/licenses/mit/)
+   ```bash
+   npm run dev       # development (auto-restart)
+   npm start         # production
+   ```
 
-Copyright (c) [2026] [Shashank More and Sarah Gillespie]
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+   A successful start looks like:
+   ```
+   Connected to MongoDB: satisficingmeals
+   SatisficingMeals running on http://localhost:3000
+   ```
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Tech Stack
+
+- **Backend:** Node.js + Express (ES Modules, no CJS)
+- **Database:** MongoDB Atlas (native driver — no Mongoose)
+- **Frontend:** Vanilla JavaScript (client-side rendering, no framework)
+- **Auth:** express-session + bcrypt
+- **Images:** Pexels API (proxied through backend)
+- **Linting:** ESLint 9 (flat config) + Prettier
+
+---
+
+## Rubric Checklist
+
+| **Criteria** | **Status / Link** |
+| --- | --- |
+| Design Document (description, personas, stories, mockups) | [View Design Doc](ADD_LINK) |
+| App accomplishes all approved requirements | ✔ Pantry, recipes, shopping, auth, analytics |
+| App is usable and includes instructions | ✔ (this README + in-app hints) |
+| App is actually useful | ✔ Reduces food waste, suggests meals |
+| ESLint config — no errors | ✔ `npm run lint` → 0 errors |
+| Code properly organized | ✔ `backend/routes/`, `backend/db/`, `frontend/js/`, `frontend/css/` |
+| JS organized in modules | ✔ api.js, auth.js, pantry.js, recipes.js, shopping.js, wikipedia.js |
+| Client-side rendering with vanilla JS | ✔ No framework, all DOM manipulation in JS modules |
+| At least 1 form | ✔ Login, signup, pantry add, shopping list add |
+| Deployed on public server | ✔ [satisficingmeals.onrender.com](https://satisficingmeals.onrender.com/) |
+| 2+ Mongo collections with CRUD | ✔ pantry_items, shopping_lists, users, purchase_history |
+| Database with 1,000+ records | ✔ `all_possible_ingredients` collection has 1,000+ documents |
+| Uses Node + Express | ✔ server.js with Express 4 |
+| Formatted with Prettier | ✔ `npm run format` applied |
+| No non-standard tags for standard components | ✔ Proper `<button>`, `<form>`, `<input>`, `<nav>` throughout |
+| CSS organized by modules | ✔ main.css, auth.css, pantry.css, shopping.css |
+| Clear descriptive README | ✔ (this file) |
+| No exposed credentials | ✔ `.env` gitignored, `.env.example` provided |
+| package.json with all dependencies | ✔ [package.json](./package.json) |
+| MIT License | ✔ [LICENSE](./LICENSE) |
+| No leftover unused code | ✔ No default routes or unused files |
+| Google Form submission correct | ✔ Thumbnail + links verified |
+| Short narrated demo video | [Watch Here](ADD_LINK) |
+| Code frozen on time | ✔ 24 hours before class |
+| Backend uses ES Modules only (no require) | ✔ All files use `import/export` |
+| No Mongoose or template engines | ✔ Native MongoDB driver only |
+
+---
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | /api/auth/signup | Create account |
+| POST | /api/auth/login | Login |
+| POST | /api/auth/logout | Logout |
+| GET | /api/auth/me | Get current user |
+| GET | /api/pantry | Get pantry items |
+| POST | /api/pantry | Add pantry item |
+| PUT | /api/pantry/:id | Update pantry item |
+| DELETE | /api/pantry/:id | Delete pantry item |
+| GET | /api/pantry/expiring | Items expiring within 7 days |
+| GET | /api/recipes/suggestions | Recipes matched to pantry |
+| GET | /api/recipes/daily | 3 random recipes of the day |
+| GET | /api/shopping | Get shopping lists |
+| POST | /api/shopping | Create shopping list |
+| PUT | /api/shopping/:id | Update shopping list |
+| DELETE | /api/shopping/:id | Delete shopping list |
+| POST | /api/shopping/:id/move-to-pantry | Move checked items to pantry |
+| GET | /api/shopping/history | Purchase history top 10 |
+| GET | /api/wikipedia/:term | Wikipedia ingredient lookup |
+| GET | /api/images/:query | Pexels food image search |
+
+---
 
 ## GenAI Usage
 
-Model: Claude Sonnet 4.6
+- **Model:** Claude Sonnet 4.6 (Anthropic) — February 2026
 
-ADD DETAILS
+| **What it helped with** | **Prompt Used** |
+| --- | --- |
+| Preparing the MongoDB database models and schemas | "Help me design the MongoDB schemas for a pantry tracking app with ingredients, recipes, and shopping lists" |
+| Writing the README | "Help me write a clean README for my project that matches this format from my previous project" |
+| CSS design system and styling | "Help me create a cohesive CSS design system with a warm earthy color palette for a meal planning app" |
+
+---
+
+## Contributing
+
+Pull requests are welcome. Follow the standard GitHub process and the authors will review at their earliest convenience.
+
+---
+
+## License
+
+[MIT License](./LICENSE) — Copyright (c) 2026 Shashank More and Sarah Gillespie
