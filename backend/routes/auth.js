@@ -5,7 +5,6 @@ import { getDB } from "../db/connection.js";
 const router = Router();
 const SALT_ROUNDS = 10;
 
-// POST /api/auth/signup
 router.post("/signup", async (req, res) => {
   try {
     const { name, username, password, goal } = req.body;
@@ -46,7 +45,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// POST /api/auth/login
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -85,7 +83,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// POST /api/auth/logout
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: "Logout failed." });
@@ -94,7 +91,6 @@ router.post("/logout", (req, res) => {
   });
 });
 
-// GET /api/auth/me
 router.get("/me", (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: "Not authenticated." });

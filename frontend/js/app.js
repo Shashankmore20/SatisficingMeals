@@ -43,9 +43,7 @@ function setupLogout() {
   document.getElementById("logout-btn").addEventListener("click", async () => {
     try {
       await api.logout();
-    } catch {
-      /* ignore */
-    }
+    } catch {}
     currentUser = null;
     showAuth();
   });
@@ -56,13 +54,10 @@ async function initApp(user) {
   await navigateTo("dashboard");
   setGreeting(user.name || user.username);
 
-  // Pre-fetch pantry images into localStorage so cards load instantly
   try {
     const pantryItems = await api.getPantry();
     prefetchPantryImages(pantryItems);
-  } catch {
-    /* non-critical */
-  }
+  } catch {}
 
   await loadDashboard(user);
 }
@@ -77,7 +72,6 @@ function setGreeting(name) {
 }
 
 async function loadDashboard(user) {
-  // Goal card
   const goalCard = document.getElementById("user-goal-card");
   const goalEl = document.getElementById("user-goal-text");
   if (goalEl && user?.goal) {
@@ -85,7 +79,6 @@ async function loadDashboard(user) {
     goalCard.classList.remove("hidden");
   }
 
-  // Expiring items
   try {
     const expiring = await api.getExpiring();
     const list = document.getElementById("expiring-list");
@@ -112,7 +105,6 @@ async function loadDashboard(user) {
     console.error("Dashboard expiring error:", err);
   }
 
-  // Recipes of the day - 3 random
   try {
     const daily = await api.getDailyRecipes();
     const recipeEl = document.getElementById("recipe-of-day");
@@ -148,7 +140,6 @@ async function loadDashboard(user) {
     console.error("Dashboard recipe error:", err);
   }
 
-  // Purchase history
   try {
     const history = await api.getPurchaseHistory();
     const historyEl = document.getElementById("top-purchases");
@@ -177,9 +168,7 @@ function loadDashboardRecipeImages() {
   let cache = {};
   try {
     cache = JSON.parse(localStorage.getItem(RECIPE_IMAGE_CACHE_KEY) || "{}");
-  } catch {
-    /* */
-  }
+  } catch {}
 
   const imgs = document.querySelectorAll(".rotd-img[data-recipe]");
   imgs.forEach(async (img) => {

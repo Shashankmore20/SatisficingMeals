@@ -28,7 +28,6 @@ function renderShoppingLists() {
     .map((list) => renderListCard(list))
     .join("");
 
-  // Attach inline add-item forms to each card
   shoppingLists.forEach((list) => {
     attachAddItemForm(list._id);
   });
@@ -107,7 +106,6 @@ function attachAddItemForm(listId) {
   const showBtn = document.getElementById(`show-add-${listId}`);
   if (!slot || !showBtn) return;
 
-  // Clone the template
   const template = document.getElementById("add-item-form-template");
   const form = template.content.cloneNode(true).querySelector(".add-item-form");
   slot.appendChild(form);
@@ -119,14 +117,12 @@ function attachAddItemForm(listId) {
   const cancelBtn = form.querySelector(".add-item-cancel");
   const dropdown = form.querySelector(".ingredient-dropdown");
 
-  // Show form
   showBtn.addEventListener("click", () => {
     form.classList.remove("hidden");
     showBtn.classList.add("hidden");
     ingredientInput.focus();
   });
 
-  // Cancel
   cancelBtn.addEventListener("click", () => {
     form.classList.add("hidden");
     showBtn.classList.remove("hidden");
@@ -136,7 +132,6 @@ function attachAddItemForm(listId) {
     dropdown.classList.add("hidden");
   });
 
-  // Autocomplete
   let debounceTimer;
   ingredientInput.addEventListener("input", () => {
     clearTimeout(debounceTimer);
@@ -179,7 +174,6 @@ function attachAddItemForm(listId) {
     setTimeout(() => dropdown.classList.add("hidden"), 150);
   });
 
-  // Submit
   submitBtn.addEventListener("click", async () => {
     const ingredient = ingredientInput.value.trim();
     if (!ingredient) {
@@ -210,7 +204,6 @@ function attachAddItemForm(listId) {
     }
   });
 
-  // Submit on Enter in ingredient field
   ingredientInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -249,7 +242,6 @@ function setupNewListForm() {
   });
 }
 
-// Global handlers
 window.toggleItem = async (listId, itemIdx) => {
   try {
     await api.toggleShoppingItem(listId, itemIdx);

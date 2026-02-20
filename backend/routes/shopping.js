@@ -5,7 +5,6 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-// GET /api/shopping - get all shopping lists for user
 router.get("/", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -21,7 +20,6 @@ router.get("/", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/shopping - create a new shopping list
 router.post("/", requireAuth, async (req, res) => {
   try {
     const { name, items } = req.body;
@@ -51,7 +49,6 @@ router.post("/", requireAuth, async (req, res) => {
   }
 });
 
-// PUT /api/shopping/:id - update a list (rename or update items)
 router.put("/:id", requireAuth, async (req, res) => {
   try {
     const { name, items } = req.body;
@@ -79,7 +76,6 @@ router.put("/:id", requireAuth, async (req, res) => {
   }
 });
 
-// DELETE /api/shopping/:id - delete a list
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -99,7 +95,6 @@ router.delete("/:id", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/shopping/:id/check/:itemIndex - toggle check on an item
 router.post("/:id/check/:itemIndex", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -132,7 +127,6 @@ router.post("/:id/check/:itemIndex", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/shopping/:id/move-to-pantry - move checked items to pantry
 router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -149,7 +143,6 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
       return res.json({ message: "No checked items to move.", moved: 0 });
     }
 
-    // For each checked item, get suggested expiry and add to pantry + purchase_history
     const now = new Date().toISOString();
     for (const item of checkedItems) {
       const ingredientData = await db
@@ -172,7 +165,6 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
       });
     }
 
-    // Remove checked items from shopping list
     const remainingItems = list.items.filter((item) => !item.checked);
     await db
       .collection("shopping_lists")
@@ -191,12 +183,10 @@ router.post("/:id/move-to-pantry", requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/shopping/history - purchase history analytics
 router.get("/history", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
 
-    // Aggregate most frequently bought items
     const history = await db
       .collection("purchase_history")
       .aggregate([

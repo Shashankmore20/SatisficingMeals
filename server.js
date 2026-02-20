@@ -28,12 +28,11 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   }),
 );
 
-// Serve static frontend files
 app.use(express.static(path.join(__dirname, "frontend")));
 
 // API Routes
@@ -44,7 +43,6 @@ app.use("/api/shopping", shoppingRoutes);
 app.use("/api/wikipedia", wikipediaRoutes);
 app.use("/api/images", imageRoutes);
 
-// Catch-all: serve index.html for client-side routing
 app.get("/{*path}", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });

@@ -3,7 +3,6 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-// GET /api/images/:query - search Pexels for a food image
 router.get("/:query", requireAuth, async (req, res) => {
   try {
     const query = encodeURIComponent(`${req.params.query} food`);

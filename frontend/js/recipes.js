@@ -34,7 +34,6 @@ function renderRecipeCard(recipe) {
         ? "score-mid"
         : "score-low";
 
-  // Safely encode recipe name for data attributes
   const safeName = encodeURIComponent(recipe.name);
   const missingJson = encodeURIComponent(JSON.stringify(recipe.missing));
 
@@ -102,7 +101,6 @@ function renderRecipeCard(recipe) {
   `;
 }
 
-// ── Recipe image cache (localStorage) ─────────────────────────────
 const RECIPE_IMAGE_CACHE_KEY = "sm_recipe_image_cache";
 
 function getRecipeImageCache() {
@@ -116,9 +114,7 @@ function getRecipeImageCache() {
 function setRecipeImageCache(cache) {
   try {
     localStorage.setItem(RECIPE_IMAGE_CACHE_KEY, JSON.stringify(cache));
-  } catch {
-    /* localStorage full */
-  }
+  } catch {}
 }
 
 function getCachedRecipeImage(name) {
@@ -138,9 +134,7 @@ export async function prefetchRecipeImages(recipes) {
     try {
       const data = await api.getImage(recipe.name);
       setCachedRecipeImage(recipe.name, data.url);
-    } catch {
-      /* skip */
-    }
+    } catch {}
   }
 }
 
@@ -155,7 +149,6 @@ async function loadRecipeImages() {
         img.parentElement.style.display = "none";
       };
       img.src = url;
-      // Show immediately — works for both fresh and cached images
       skeleton.style.display = "none";
       img.style.opacity = "1";
     };
@@ -175,8 +168,6 @@ async function loadRecipeImages() {
     }
   }
 }
-
-// ── Event delegation — one listener on the container ──────────────────────
 
 function setupRecipeListeners() {
   const container = document.getElementById("recipes-list");
@@ -201,9 +192,7 @@ function setupRecipeListeners() {
   });
 }
 
-// ── Add missing to shopping list ───────────────────────────────────────────
 async function handleAddMissing(recipeName, missing) {
-  // Use a proper modal instead of prompt — reuse the instructions modal
   const modal = document.getElementById("instructions-modal");
   const contentEl = document.getElementById("instructions-modal-content");
 
@@ -264,7 +253,6 @@ async function handleAddMissing(recipeName, missing) {
     });
 }
 
-// ── Prep instructions modal ────────────────────────────────────────────────
 async function showPrepModal(recipeName) {
   const modal = document.getElementById("prep-modal");
   const contentEl = document.getElementById("prep-modal-content");
@@ -315,7 +303,6 @@ async function showPrepModal(recipeName) {
   }
 }
 
-// ── Cooking instructions modal ─────────────────────────────────────────────
 async function showInstructionsModal(recipeName) {
   const modal = document.getElementById("instructions-modal");
   const contentEl = document.getElementById("instructions-modal-content");
@@ -334,7 +321,6 @@ async function showInstructionsModal(recipeName) {
         r.name.toLowerCase() === decodeURIComponent(recipeName).toLowerCase(),
     );
 
-    // Support both 'Instructions' (capital) and 'instructions' (lowercase)
     const instructionData = recipe.Instructions || recipe.instructions;
 
     if (!recipe || !instructionData) {
@@ -346,7 +332,6 @@ async function showInstructionsModal(recipeName) {
       return;
     }
 
-    // Instructions can be a string or an array of steps
     const steps = Array.isArray(instructionData)
       ? instructionData
       : instructionData.split(/\n+/).filter(Boolean);
@@ -379,7 +364,6 @@ async function showInstructionsModal(recipeName) {
   }
 }
 
-// ── Modal setup ────────────────────────────────────────────────────────────
 export function setupPrepModal() {
   const prepModal = document.getElementById("prep-modal");
   document

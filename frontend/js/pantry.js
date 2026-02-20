@@ -91,11 +91,9 @@ function renderPantry() {
     })
     .join("");
 
-  // Load images lazily after render
   loadPantryImages();
 }
 
-// ── Image cache using localStorage ────────────────────────────────
 const IMAGE_CACHE_KEY = "sm_image_cache";
 
 function getImageCache() {
@@ -109,9 +107,7 @@ function getImageCache() {
 function setImageCache(cache) {
   try {
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-  } catch {
-    /* localStorage full */
-  }
+  } catch {}
 }
 
 function getCachedImage(ingredient) {
@@ -131,9 +127,7 @@ export async function prefetchPantryImages(items) {
     try {
       const data = await api.getImage(item.ingredient);
       setCachedImage(item.ingredient, data.thumb);
-    } catch {
-      /* skip */
-    }
+    } catch {}
   }
 }
 
@@ -155,21 +149,18 @@ async function loadPantryImages() {
         img.parentElement.style.display = "none";
       };
       img.src = url;
-      // For already-cached browser images, onload won't fire
-      // Use a short timeout to check if it loaded
+
       setTimeout(() => {
         if (img.naturalWidth > 0) showImage();
       }, 100);
     };
 
-    // Check localStorage cache first — no API call needed
     const cached = getCachedImage(query);
     if (cached) {
       applyImage(cached);
       continue;
     }
 
-    // Not in cache yet — fetch and store
     try {
       const data = await api.getImage(query);
       setCachedImage(query, data.thumb);
@@ -213,7 +204,6 @@ function setupPantryForm() {
     dropdown.classList.add("hidden");
   });
 
-  // ── Autocomplete ──
   let debounceTimer;
   let selectedFromDropdown = false;
 
@@ -255,7 +245,6 @@ function setupPantryForm() {
             selectedFromDropdown = true;
             dropdown.classList.add("hidden");
 
-            // Auto-fill expiry: 2 weeks from today
             if (!expiryInput.value) {
               expiryInput.value = twoWeeksFromToday();
             }
@@ -267,7 +256,6 @@ function setupPantryForm() {
     }, 250);
   });
 
-  // Hide dropdown on blur, auto-fill expiry if still empty
   ingredientInput.addEventListener("blur", () => {
     setTimeout(() => dropdown.classList.add("hidden"), 150);
     const val = ingredientInput.value.trim();
@@ -276,7 +264,6 @@ function setupPantryForm() {
     }
   });
 
-  // ── Submit ──
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     dropdown.classList.add("hidden");
@@ -287,7 +274,6 @@ function setupPantryForm() {
     const expiration_date = expiryInput.value.trim();
 
     try {
-      // If user typed something not selected from dropdown, add it to DB silently
       if (!selectedFromDropdown) {
         await api.addIngredient({
           ingredient,
@@ -326,7 +312,6 @@ function highlightMatch(ingredient, query) {
   return `…${ingredient.slice(Math.max(0, idx - 2), idx)}<strong>${ingredient.slice(idx, idx + query.length)}</strong>${ingredient.slice(idx + query.length, idx + query.length + 6)}`;
 }
 
-// Global functions called from inline onclick
 window.deletePantryItem = async (id) => {
   if (!confirm("Remove this item from your pantry?")) return;
   try {

@@ -3,7 +3,6 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-// GET /api/wikipedia/:term - look up an ingredient on Wikipedia
 router.get("/:term", requireAuth, async (req, res) => {
   try {
     const term = encodeURIComponent(req.params.term);

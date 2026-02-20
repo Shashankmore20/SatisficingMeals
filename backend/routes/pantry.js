@@ -5,7 +5,6 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-// GET /api/pantry - get all pantry items for current user
 router.get("/", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -21,7 +20,6 @@ router.get("/", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/pantry - add a new pantry item
 router.post("/", requireAuth, async (req, res) => {
   try {
     const { ingredient, quantity, unit, expiration_date } = req.body;
@@ -34,7 +32,6 @@ router.post("/", requireAuth, async (req, res) => {
 
     const db = await getDB();
 
-    // Get suggested expiry from ingredients_db if no date provided
     let expiryDate = expiration_date;
     if (!expiryDate) {
       const ingredientData = await db
@@ -54,7 +51,6 @@ router.post("/", requireAuth, async (req, res) => {
 
     const result = await db.collection("pantry_items").insertOne(newItem);
 
-    // Also log to purchase_history
     await db.collection("purchase_history").insertOne({
       username: req.session.username,
       ingredient: ingredient.toLowerCase(),
@@ -68,7 +64,6 @@ router.post("/", requireAuth, async (req, res) => {
   }
 });
 
-// PUT /api/pantry/:id - update a pantry item
 router.put("/:id", requireAuth, async (req, res) => {
   try {
     const { ingredient, quantity, unit, expiration_date } = req.body;
@@ -98,7 +93,6 @@ router.put("/:id", requireAuth, async (req, res) => {
   }
 });
 
-// DELETE /api/pantry/:id - delete a pantry item
 router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -118,7 +112,6 @@ router.delete("/:id", requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/pantry/expiring - items expiring within 7 days
 router.get("/expiring", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -133,7 +126,6 @@ router.get("/expiring", requireAuth, async (req, res) => {
       })
       .toArray();
 
-    // Filter by date (dates stored as strings like "M/D/YY")
     const expiring = items.filter((item) => {
       if (!item.expiration_date) return false;
       const exp = new Date(item.expiration_date);
@@ -151,7 +143,6 @@ router.get("/expiring", requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/pantry/suggest-expiry/:ingredient
 router.get("/suggest-expiry/:ingredient", requireAuth, async (req, res) => {
   try {
     const db = await getDB();
@@ -170,7 +161,6 @@ router.get("/suggest-expiry/:ingredient", requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/pantry/search-ingredients?q=chick - search ingredients for autocomplete
 router.get("/search-ingredients", requireAuth, async (req, res) => {
   try {
     const q = req.query.q || "";
@@ -190,7 +180,6 @@ router.get("/search-ingredients", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/pantry/add-ingredient - add to all_possible_ingredients if missing
 router.post("/add-ingredient", requireAuth, async (req, res) => {
   try {
     const { ingredient, expiration_date } = req.body;
