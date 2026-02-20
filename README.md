@@ -27,21 +27,24 @@ See the included package.json file listing all the specific dependencies of the 
 ### Installation Steps
 
 After installing the dependencies, pull the repository.
+
 ```
 git clone https://github.com/your-username/SatisficingMeals.git
 cd SatisficingMeals
 ```
 
 ### Instructions to build
+
 In your terminal, start the server.
+
 ```
 node server.js
 ```
 
 A successful result will look something like
+
 > Connected to MongoDB: satisficingmeals
 > SatisficingMeals running on http://localhost:3000
-
 
 In your preferred web browser, paste in the outputted link, such http://localhost:3000
 

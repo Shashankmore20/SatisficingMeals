@@ -1,11 +1,7 @@
 import { api } from "./api.js";
 import { initAuth } from "./auth.js";
 import { initPantry, setupEditModal, prefetchPantryImages } from "./pantry.js";
-import {
-  initRecipes,
-  setupPrepModal,
-  prefetchRecipeImages,
-} from "./recipes.js";
+import { initRecipes, setupPrepModal } from "./recipes.js";
 import { initShopping } from "./shopping.js";
 import { setupWikiModal } from "./wikipedia.js";
 
