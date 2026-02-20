@@ -5,7 +5,9 @@
 ## Class Link: CS5610 Project 2
 
 Github: https://github.com/Shashankmore20/SatisficingMeals
+
 Slides: https://docs.google.com/presentation/d/1e2AYU5_qWhqYLUPDUOzLA5Z1_5bqZhFyau5e3wwjaNg/edit?usp=sharing
+
 Video: ADD
 
 ## Project Objective
