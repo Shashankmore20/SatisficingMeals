@@ -66,22 +66,118 @@ function renderPantry() {
 
       return `
       <div class="pantry-item ${expiryClass}" data-id="${item._id}">
-        <div class="pantry-item-main">
-          <span class="pantry-ingredient">${capitalize(item.ingredient)}</span>
-          <span class="pantry-qty">${item.quantity} ${item.unit}</span>
+        <div class="pantry-item-img-wrap">
+          <img class="pantry-item-img" src="" alt="${capitalize(item.ingredient)}"
+            data-query="${item.ingredient}"
+            onerror="this.parentElement.style.display='none'" />
+          <div class="pantry-item-img-skeleton"></div>
         </div>
-        <div class="pantry-item-meta">
-          <span class="pantry-expiry ${expiryClass}">${expiryText}</span>
-        </div>
-        <div class="pantry-item-actions">
-          <button class="btn-icon" title="Look up on Wikipedia" onclick="window.lookupWiki('${item.ingredient}')">🔍</button>
-          <button class="btn-icon" title="Edit item" onclick="window.editPantryItem('${item._id}')">✏️</button>
-          <button class="btn-icon btn-danger" title="Delete item" onclick="window.deletePantryItem('${item._id}')">🗑️</button>
+        <div class="pantry-item-body">
+          <div class="pantry-item-main">
+            <span class="pantry-ingredient">${capitalize(item.ingredient)}</span>
+            <span class="pantry-qty">${item.quantity} ${item.unit}</span>
+          </div>
+          <div class="pantry-item-meta">
+            <span class="pantry-expiry ${expiryClass}">${expiryText}</span>
+          </div>
+          <div class="pantry-item-actions">
+            <button class="btn-icon" title="Look up on Wikipedia" onclick="window.lookupWiki('${item.ingredient}')">🔍</button>
+            <button class="btn-icon" title="Edit item" onclick="window.editPantryItem('${item._id}')">✏️</button>
+            <button class="btn-icon btn-danger" title="Delete item" onclick="window.deletePantryItem('${item._id}')">🗑️</button>
+          </div>
         </div>
       </div>
     `;
     })
     .join("");
+
+  // Load images lazily after render
+  loadPantryImages();
+}
+
+// ── Image cache using localStorage ────────────────────────────────
+const IMAGE_CACHE_KEY = "sm_image_cache";
+
+function getImageCache() {
+  try {
+    return JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function setImageCache(cache) {
+  try {
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    /* localStorage full */
+  }
+}
+
+function getCachedImage(ingredient) {
+  return getImageCache()[ingredient.toLowerCase()] || null;
+}
+
+function setCachedImage(ingredient, url) {
+  const cache = getImageCache();
+  cache[ingredient.toLowerCase()] = url;
+  setImageCache(cache);
+}
+
+export async function prefetchPantryImages(items) {
+  const cache = getImageCache();
+  const missing = items.filter((item) => !cache[item.ingredient.toLowerCase()]);
+  for (const item of missing) {
+    try {
+      const data = await api.getImage(item.ingredient);
+      setCachedImage(item.ingredient, data.thumb);
+    } catch {
+      /* skip */
+    }
+  }
+}
+
+async function loadPantryImages() {
+  const imgs = document.querySelectorAll(".pantry-item-img[data-query]");
+  for (const img of imgs) {
+    const query = img.dataset.query;
+    const skeleton = img.parentElement.querySelector(
+      ".pantry-item-img-skeleton",
+    );
+
+    const applyImage = (url) => {
+      const showImage = () => {
+        skeleton.style.display = "none";
+        img.style.opacity = "1";
+      };
+      img.onload = showImage;
+      img.onerror = () => {
+        img.parentElement.style.display = "none";
+      };
+      img.src = url;
+      // For already-cached browser images, onload won't fire
+      // Use a short timeout to check if it loaded
+      setTimeout(() => {
+        if (img.naturalWidth > 0) showImage();
+      }, 100);
+    };
+
+    // Check localStorage cache first — no API call needed
+    const cached = getCachedImage(query);
+    if (cached) {
+      applyImage(cached);
+      continue;
+    }
+
+    // Not in cache yet — fetch and store
+    try {
+      const data = await api.getImage(query);
+      setCachedImage(query, data.thumb);
+      applyImage(data.thumb);
+    } catch {
+      img.parentElement.style.display = "none";
+    }
+  }
 }
 
 function setupFilters() {

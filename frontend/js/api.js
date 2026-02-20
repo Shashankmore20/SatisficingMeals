@@ -55,6 +55,9 @@ export const api = {
   moveToPantry: (id) => request("POST", `/shopping/${id}/move-to-pantry`),
   getPurchaseHistory: () => request("GET", "/shopping/history"),
 
+  // Images
+  getImage: (query) => request("GET", `/images/${encodeURIComponent(query)}`),
+
   // Wikipedia
   getWikipedia: (term) =>
     request("GET", `/wikipedia/${encodeURIComponent(term)}`),

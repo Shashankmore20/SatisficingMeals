@@ -1014,3 +1014,61 @@ img {
   align-items: center;
   padding-top: 4px;
 }
+
+/* ─── Dashboard Recipe Card Images ──────────────────────────────── */
+.rotd-card-item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.rotd-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 130px;
+  background: var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.rotd-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.rotd-card-item:hover .rotd-img {
+  transform: scale(1.03);
+}
+
+.rotd-img-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--cream) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.rotd-card-item .rotd-card-top,
+.rotd-card-item .rotd-desc,
+.rotd-card-item .rotd-ingredients {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.rotd-card-item .rotd-card-top {
+  padding-top: 14px;
+}
+
+.rotd-card-item .rotd-ingredients {
+  padding-bottom: 14px;
+}

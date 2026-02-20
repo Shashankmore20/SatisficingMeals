@@ -1,7 +1,11 @@
 import { api } from "./api.js";
 import { initAuth } from "./auth.js";
-import { initPantry, setupEditModal } from "./pantry.js";
-import { initRecipes, setupPrepModal } from "./recipes.js";
+import { initPantry, setupEditModal, prefetchPantryImages } from "./pantry.js";
+import {
+  initRecipes,
+  setupPrepModal,
+  prefetchRecipeImages,
+} from "./recipes.js";
 import { initShopping } from "./shopping.js";
 import { setupWikiModal } from "./wikipedia.js";
 
@@ -55,6 +59,15 @@ async function initApp(user) {
   setupNavigation();
   await navigateTo("dashboard");
   setGreeting(user.name || user.username);
+
+  // Pre-fetch pantry images into localStorage so cards load instantly
+  try {
+    const pantryItems = await api.getPantry();
+    prefetchPantryImages(pantryItems);
+  } catch {
+    /* non-critical */
+  }
+
   await loadDashboard(user);
 }
 
@@ -112,6 +125,10 @@ async function loadDashboard(user) {
         .map(
           (r) => `
         <div class="rotd-card-item">
+          <div class="rotd-img-wrap">
+            <img class="rotd-img" src="" alt="${capitalize(r.name)}" data-recipe="${encodeURIComponent(r.name)}" />
+            <div class="rotd-img-skeleton"></div>
+          </div>
           <div class="rotd-card-top">
             <h3 class="rotd-name">${capitalize(r.name)}</h3>
             <div class="rotd-meta">
@@ -127,6 +144,7 @@ async function loadDashboard(user) {
         </div>`,
         )
         .join("")}</div>`;
+      loadDashboardRecipeImages();
     } else {
       recipeEl.innerHTML = `<p class="empty-state small">No recipes found in database.</p>`;
     }
@@ -156,6 +174,42 @@ async function loadDashboard(user) {
   } catch (err) {
     console.error("Dashboard history error:", err);
   }
+}
+
+function loadDashboardRecipeImages() {
+  const RECIPE_IMAGE_CACHE_KEY = "sm_recipe_image_cache";
+  let cache = {};
+  try {
+    cache = JSON.parse(localStorage.getItem(RECIPE_IMAGE_CACHE_KEY) || "{}");
+  } catch {
+    /* */
+  }
+
+  const imgs = document.querySelectorAll(".rotd-img[data-recipe]");
+  imgs.forEach(async (img) => {
+    const name = decodeURIComponent(img.dataset.recipe);
+    const skeleton = img.parentElement.querySelector(".rotd-img-skeleton");
+
+    const applyImage = (url) => {
+      img.src = url;
+      skeleton.style.display = "none";
+      img.style.opacity = "1";
+    };
+
+    const cached = cache[name.toLowerCase()];
+    if (cached) {
+      applyImage(cached);
+    } else {
+      try {
+        const data = await api.getImage(name);
+        cache[name.toLowerCase()] = data.url;
+        localStorage.setItem(RECIPE_IMAGE_CACHE_KEY, JSON.stringify(cache));
+        applyImage(data.url);
+      } catch {
+        img.parentElement.style.display = "none";
+      }
+    }
+  });
 }
 
 let pageModulesLoaded = {};

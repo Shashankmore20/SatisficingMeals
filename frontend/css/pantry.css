@@ -40,10 +40,10 @@
   background: var(--warm-white);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
+  overflow: hidden;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   box-shadow: var(--shadow-sm);
   transition:
     box-shadow 0.15s,
@@ -56,25 +56,71 @@
 
 .pantry-item.expiring-soon {
   border-color: var(--amber);
-  background: linear-gradient(
-    135deg,
-    var(--warm-white) 60%,
-    var(--amber-light)
-  );
 }
 
 .pantry-item.expiring-critical {
   border-color: var(--terracotta);
-  background: linear-gradient(
-    135deg,
-    var(--warm-white) 60%,
-    var(--terracotta-light)
-  );
 }
 
 .pantry-item.expired {
   border-color: var(--red);
   opacity: 0.75;
+}
+
+/* ─── Image Section ──────────────────────────────────────────────── */
+.pantry-item-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  background: var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pantry-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition:
+    transform 0.3s ease,
+    opacity 0.4s ease;
+}
+
+.pantry-item:hover .pantry-item-img {
+  transform: scale(1.04);
+}
+
+.pantry-item-img-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--cream) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ─── Card Body ──────────────────────────────────────────────────── */
+.pantry-item-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
 }
 
 .pantry-item-main {
@@ -129,11 +175,12 @@
   display: flex;
   gap: 4px;
   justify-content: flex-end;
-  padding-top: 4px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
+  margin-top: auto;
 }
 
-/* ─── Ingredient Autocomplete Dropdown ───────────────────────────── */
+/* ─── Autocomplete Dropdown ──────────────────────────────────────── */
 .ingredient-dropdown {
   position: absolute;
   top: calc(100% + 4px);
@@ -180,7 +227,7 @@
   font-weight: 600;
 }
 
-/* ─── Ingredient autocomplete hint ──────────────────────────────── */
+/* ─── Wiki preview ───────────────────────────────────────────────── */
 .wiki-preview {
   background: var(--sage-light);
   border-radius: var(--radius-sm);

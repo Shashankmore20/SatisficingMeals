@@ -18,6 +18,7 @@ async function loadRecipeSuggestions() {
     }
 
     container.innerHTML = recipes.map((r) => renderRecipeCard(r)).join("");
+    loadRecipeImages();
   } catch (err) {
     container.innerHTML = `<p class="empty-state">Failed to load recipes.</p>`;
     console.error(err);
@@ -40,6 +41,13 @@ function renderRecipeCard(recipe) {
   return `
     <div class="recipe-card ${recipe.usesExpiring ? "uses-expiring" : ""}">
       ${recipe.usesExpiring ? `<div class="expiring-badge">Uses expiring ingredients!</div>` : ""}
+
+      <div class="recipe-img-wrap">
+        <img class="recipe-img" src="" alt="${recipe.name}"
+          data-query="${recipe.name}"
+          onerror="this.parentElement.style.display='none'" />
+        <div class="recipe-img-skeleton"></div>
+      </div>
 
       <div class="recipe-header">
         <h3 class="recipe-name">${recipe.name}</h3>
@@ -94,7 +102,82 @@ function renderRecipeCard(recipe) {
   `;
 }
 
+// ── Recipe image cache (localStorage) ─────────────────────────────
+const RECIPE_IMAGE_CACHE_KEY = "sm_recipe_image_cache";
+
+function getRecipeImageCache() {
+  try {
+    return JSON.parse(localStorage.getItem(RECIPE_IMAGE_CACHE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function setRecipeImageCache(cache) {
+  try {
+    localStorage.setItem(RECIPE_IMAGE_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    /* localStorage full */
+  }
+}
+
+function getCachedRecipeImage(name) {
+  return getRecipeImageCache()[name.toLowerCase()] || null;
+}
+
+function setCachedRecipeImage(name, url) {
+  const cache = getRecipeImageCache();
+  cache[name.toLowerCase()] = url;
+  setRecipeImageCache(cache);
+}
+
+export async function prefetchRecipeImages(recipes) {
+  const cache = getRecipeImageCache();
+  const missing = recipes.filter((r) => !cache[r.name.toLowerCase()]);
+  for (const recipe of missing) {
+    try {
+      const data = await api.getImage(recipe.name);
+      setCachedRecipeImage(recipe.name, data.url);
+    } catch {
+      /* skip */
+    }
+  }
+}
+
+async function loadRecipeImages() {
+  const imgs = document.querySelectorAll(".recipe-img[data-query]");
+  for (const img of imgs) {
+    const query = img.dataset.query;
+    const skeleton = img.parentElement.querySelector(".recipe-img-skeleton");
+
+    const applyImage = (url) => {
+      img.onerror = () => {
+        img.parentElement.style.display = "none";
+      };
+      img.src = url;
+      // Show immediately — works for both fresh and cached images
+      skeleton.style.display = "none";
+      img.style.opacity = "1";
+    };
+
+    const cached = getCachedRecipeImage(query);
+    if (cached) {
+      applyImage(cached);
+      continue;
+    }
+
+    try {
+      const data = await api.getImage(query);
+      setCachedRecipeImage(query, data.url);
+      applyImage(data.url);
+    } catch {
+      img.parentElement.style.display = "none";
+    }
+  }
+}
+
 // ── Event delegation — one listener on the container ──────────────────────
+
 function setupRecipeListeners() {
   const container = document.getElementById("recipes-list");
 

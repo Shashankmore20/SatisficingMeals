@@ -7,6 +7,7 @@ import pantryRoutes from "./backend/routes/pantry.js";
 import recipeRoutes from "./backend/routes/recipes.js";
 import shoppingRoutes from "./backend/routes/shopping.js";
 import wikipediaRoutes from "./backend/routes/wikipedia.js";
+import imageRoutes from "./backend/routes/images.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -41,6 +42,7 @@ app.use("/api/pantry", pantryRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/shopping", shoppingRoutes);
 app.use("/api/wikipedia", wikipediaRoutes);
+app.use("/api/images", imageRoutes);
 
 // Catch-all: serve index.html for client-side routing
 app.get("/{*path}", (req, res) => {
