@@ -93,7 +93,7 @@ The app goes beyond tracking. It suggests meals you can make with what you alrea
 
 | **Criteria** | **Status / Link** |
 | --- | --- |
-| Design Document (description, personas, stories, mockups) | [View Design Doc](ADD_LINK) |
+| Design Document (description, personas, stories, mockups) | [View Design Doc](./submissions/DesignDoc.pdf) |
 | App accomplishes all approved requirements | ✔ Pantry, recipes, shopping, auth, analytics |
 | App is usable and includes instructions | ✔ (this README + in-app hints) |
 | App is actually useful | ✔ Reduces food waste, suggests meals |
