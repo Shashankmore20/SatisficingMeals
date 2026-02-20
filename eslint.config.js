@@ -2,7 +2,6 @@ import globals from "globals";
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import prettier from "eslint-plugin-prettier";
-import jest from "eslint-plugin-jest";
 
 export default [
   {

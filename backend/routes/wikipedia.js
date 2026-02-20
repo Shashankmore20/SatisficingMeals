@@ -14,7 +14,9 @@ router.get("/:term", requireAuth, async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(404).json({ error: "No Wikipedia article found for this ingredient." });
+      return res
+        .status(404)
+        .json({ error: "No Wikipedia article found for this ingredient." });
     }
 
     const data = await response.json();

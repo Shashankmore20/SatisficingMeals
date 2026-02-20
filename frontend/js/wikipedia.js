@@ -35,5 +35,7 @@ export function setupWikiModal() {
   const closeBtn = document.getElementById("wiki-close");
 
   closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-  modal.querySelector(".modal-backdrop").addEventListener("click", () => modal.classList.add("hidden"));
+  modal
+    .querySelector(".modal-backdrop")
+    .addEventListener("click", () => modal.classList.add("hidden"));
 }
