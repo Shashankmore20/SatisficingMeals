@@ -4,11 +4,11 @@
 
 ## Class Link: CS5610 Project 2
 
+Link: https://satisficingmeals.onrender.com/
+
 Github: https://github.com/Shashankmore20/SatisficingMeals
 
 Slides: https://docs.google.com/presentation/d/1e2AYU5_qWhqYLUPDUOzLA5Z1_5bqZhFyau5e3wwjaNg/edit?usp=sharing
-
-Video: ADD
 
 ## Project Objective
 
@@ -20,17 +20,32 @@ Users can look up unfamiliar ingredients via Wikipedia to learn what they are an
 
 ADD
 
-## Installation
+## Installation and Build
 
-See the included package.json file listing all the specific dependencies of the project.
+See the included package.json file listing all the specific dependencies of the project. Prerequisites include Node.js, npm, and a running backend database (see backend/db/connection.js for configuration).
 
 ### Installation Steps
 
-ADD
+After installing the dependencies, pull the repository.
+```
+git clone https://github.com/your-username/SatisficingMeals.git
+cd SatisficingMeals
+```
 
 ### Instructions to build
+In your terminal, start the server.
+```
+node server.js
+```
 
-ADD
+A successful result will look something like
+> Connected to MongoDB: satisficingmeals
+> SatisficingMeals running on http://localhost:3000
+
+
+In your preferred web browser, paste in the outputted link, such http://localhost:3000
+
+This will bring up a locally hosted version of the webpage
 
 ## Contributing
 
